@@ -4,9 +4,9 @@
  *                                                                        *
  *  Software Version: 1.0                                                 *
  *                                                                        *
- *  Release Date    : Mon Mar  1 17:10:46 PST 2021                        *
+ *  Release Date    : Tue Mar  2 08:54:51 PST 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.0.1                                               *
+ *  Release Build   : 1.0.2                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
