@@ -1,5 +1,5 @@
 
-CXXFLAGS += -g -std=c++11 -Wall -Wno-unknown-pragmas -Wno-unused-variable -Wno-unused-label -Wno-unused-but-set-variable
+CXXFLAGS += -g -std=c++11 -Wall -Wno-unknown-pragmas -Wno-unused-variable -Wno-unused-label -Wno-unused-but-set-variable -Wno-maybe-uninitialized
 
 # =====================================================================
 # ENVIRONMENT VARIABLES
@@ -19,7 +19,10 @@ CATAPULT_HOME ?= $(MGC_HOME)
 ifneq "$(CATAPULT_HOME)" ""
 
 # Pick up SystemC via "SYSTEMC_HOME"
-SYSTEMC_HOME ?= $(CATAPULT_HOME)/shared
+ifneq "$(SYSTEMC_HOME)" ""
+$(warning - Warning: SYSTEMC_HOME and MGC_HOME/CATAPULT_HOME are both set. Using SystemC from MGC_HOME/CATAPULT_HOME)
+endif
+SYSTEMC_HOME := $(CATAPULT_HOME)/shared
 
 # Pick up Connections via "CONNECTIONS_HOME"
 CONNECTIONS_HOME ?= $(CATAPULT_HOME)/shared
@@ -36,6 +39,8 @@ AC_SIMUTILS ?= $(CATAPULT_HOME)/shared
 # Pick up C++ compiler
 CXX := $(CATAPULT_HOME)/bin/g++
 LD_LIBRARY_PATH := $(if $(LD_LIBRARY_PATH),$(LD_LIBRARY_PATH):$(CATAPULT_HOME)/lib:$(CATAPULT_HOME)/shared/lib,$(CATAPULT_HOME)/lib:$(CATAPULT_HOME)/shared/lib)
+export LD_LIBRARY_PATH
+LIBDIRS += -L$(CATAPULT_HOME)/lib -L$(CATAPULT_HOME)/shared/lib
 
 else
 
@@ -59,6 +64,9 @@ endif
 
 # Default to the compiler installed on the machine
 CXX ?= g++
+LD_LIBRARY_PATH := $(if $(LD_LIBRARY_PATH),$(LD_LIBRARY_PATH):$(SYSTEMC_HOME)/lib:$(SYSTEMC_HOME)/lib-linux64,$(SYSTEMC_HOME)/lib:$(SYSTEMC_HOME)/lib-linux64)
+export LD_LIBRARY_PATH
+LIBDIRS += -L$(SYSTEMC_HOME)/lib -L$(SYSTEMC_HOME)/lib-linux64
 
 endif
 
@@ -87,7 +95,7 @@ checkvars: checkvar_SYSTEMC_HOME checkvar_CONNECTIONS_HOME checkvar_MATCHLIB_HOM
 SOURCE_DIR = $(dir $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST)))
 
 INCDIRS := -I$(SOURCE_DIR)
-INCDIRS += -I$(SYSTEMC_HOME)/include
+INCDIRS += -I$(SYSTEMC_HOME)/include -I$(SYSTEMC_HOME)/src
 INCDIRS += -I$(CONNECTIONS_HOME)/include
 INCDIRS += -I$(MATCHLIB_HOME)/cmod/include
 INCDIRS += -I$(AC_TYPES)/include
@@ -99,10 +107,7 @@ CPPFLAGS_FAST = $(INCDIRS)
 CPPFLAGS_FAST += -DCONNECTIONS_FAST_SIM -DSC_INCLUDE_DYNAMIC_PROCESSES -O3
 CPPFLAGS += -DCONNECTIONS_ACCURATE_SIM -DSC_INCLUDE_DYNAMIC_PROCESSES
 
-LIBDIRS += -L$(SYSTEMC_HOME)/lib
 LIBS += -lsystemc -lpthread
-LD_LIBRARY_PATH := $(if $(LD_LIBRARY_PATH),$(LD_LIBRARY_PATH):$(SYSTEMC_HOME)/lib,$(SYSTEMC_HOME)/lib)
-export LD_LIBRARY_PATH
 
 .PHONY: all build run fast clean sim_clean
 
@@ -117,11 +122,21 @@ run_fast: trace_fast.vcd
 
 trace.vcd: sim_sc
 	-@echo "Starting execution in directory `pwd`"
-	./$^ $(SOURCE_DIR)../file_io
+	@cp -f $(SOURCE_DIR)../file_io/bias.txt .
+	@cp -f $(SOURCE_DIR)../file_io/data.txt .
+	@cp -f $(SOURCE_DIR)../file_io/output.txt .
+	@cp -f $(SOURCE_DIR)../file_io/kernel.txt.gz .
+	@gzip -f -d kernel.txt.gz
+	./$^ .
 
 trace_fast.vcd: sim_sc_fast
 	-@echo "Starting execution in directory `pwd`"
-	./$^ $(SOURCE_DIR)../file_io
+	@cp -f $(SOURCE_DIR)../file_io/bias.txt .
+	@cp -f $(SOURCE_DIR)../file_io/data.txt .
+	@cp -f $(SOURCE_DIR)../file_io/output.txt .
+	@cp -f $(SOURCE_DIR)../file_io/kernel.txt.gz .
+	@gzip -f -d kernel.txt.gz
+	./$^ .
 
 sim_sc: checkvars $(wildcard $(SOURCE_DIR)*.h) $(wildcard $(SOURCE_DIR)*.cpp)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LIBDIRS) $(wildcard $(SOURCE_DIR)*.cpp) -o $@ $(LIBS)
@@ -158,8 +173,10 @@ help:
 	-@echo "  CXX                = $(CXX)"
 	-@echo "  LIBDIRS            = $(LIBDIRS)"
 	-@echo "  LD_LIBRARY_PATH    = $(LD_LIBRARY_PATH)"
+	-@echo "  SOURCE_DIR         = $(SOURCE_DIR)"
+	-@echo "  INCDIRS            = $(INCDIRS)"
 	-@echo ""
 
 clean: sim_clean
-	@rm -rf *.vcd *.wlf design_check* my_log* catapult.log .vscode
+	@rm -rf *.vcd *.wlf design_check* my_log* catapult.log .vscode bias.txt kernel.txt kernel.txt.gz output.txt data.txt
 
