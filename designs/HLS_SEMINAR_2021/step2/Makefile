@@ -1,5 +1,5 @@
 
-CXXFLAGS += -O3 -std=c++11 -Wall -Wno-unknown-pragmas -Wno-unused-variable -Wno-unused-label -Wno-unused-but-set-variable -Wno-maybe-uninitialized
+CXXFLAGS += -O3 -std=c++11 -Wall -Wno-unknown-pragmas -Wno-unused-label
 
 # =====================================================================
 # ENVIRONMENT VARIABLES

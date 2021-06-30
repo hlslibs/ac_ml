@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.1                                                 *
+ *  Software Version: 1.2                                                 *
  *                                                                        *
- *  Release Date    : Fri Jun  4 11:46:59 PDT 2021                        *
+ *  Release Date    : Wed Jun 30 11:14:16 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.1.0                                               *
+ *  Release Build   : 1.2.0                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
@@ -595,7 +595,6 @@ namespace axi
               if ((axi::axi4<Cfg>::BURST_WIDTH == 0 ) || (ex.burst.to_uint64() == Enc::AXBURST::INCR)) {
                 ex.addr += bytesPerBeat * (ar.len+1);
               }
-
             }
 
             // Here we segment at 4k address boundaries as per axi4 protocol

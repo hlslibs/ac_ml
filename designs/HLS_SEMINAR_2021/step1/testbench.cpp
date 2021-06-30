@@ -2,11 +2,11 @@
  *                                                                        *
  *  Algorithmic C (tm) Math Library                                       *
  *                                                                        *
- *  Software Version: 1.1                                                 *
+ *  Software Version: 1.2                                                 *
  *                                                                        *
- *  Release Date    : Fri Jun  4 11:46:59 PDT 2021                        *
+ *  Release Date    : Wed Jun 30 11:14:16 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.1.0                                               *
+ *  Release Build   : 1.2.0                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
@@ -126,9 +126,9 @@ public:
       MEM_ADDR_TYPE rd_addr,wr_addr;
       BURST_TYPE rd_burst, wr_burst;
       bool rd = mem_in_addr.PopNB(rd_addr);
-      bool rb = mem_in_burst.PopNB(rd_burst);
+      bool rb = mem_in_burst.PopNB(rd_burst); (void)rb; // return value unused
       bool wr = mem_out_addr.PopNB(wr_addr);
-      bool wb = mem_out_burst.PopNB(wr_burst);
+      bool wb = mem_out_burst.PopNB(wr_burst); (void)wb; // return value unused
       int rd_offset = 0;
       int wr_offset = 0;
       if (rd) {

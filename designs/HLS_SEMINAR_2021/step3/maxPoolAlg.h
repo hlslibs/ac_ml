@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.1                                                 *
+ *  Software Version: 1.2                                                 *
  *                                                                        *
- *  Release Date    : Fri Jun  4 11:46:59 PDT 2021                        *
+ *  Release Date    : Wed Jun 30 11:14:16 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.1.0                                               *
+ *  Release Build   : 1.2.0                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
@@ -61,7 +61,7 @@ void maxPoolAlg(    IN_FMAP_TYPE num_in_fmaps,
               mem_in_burst_cpu.Push(1);
               data = mem_in_data_cpu.Pop();
             }
-            if (kr == 0 && kc == 0 || data > max) { max = data; }
+            if ((kr == 0 && kc == 0) || data > max) { max = data; }
           }
         }
         int idx = write_offset + addr;

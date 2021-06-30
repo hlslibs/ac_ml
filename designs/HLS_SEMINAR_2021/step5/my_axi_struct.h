@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.1                                                 *
+ *  Software Version: 1.2                                                 *
  *                                                                        *
- *  Release Date    : Fri Jun  4 11:46:59 PDT 2021                        *
+ *  Release Date    : Wed Jun 30 11:14:16 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.1.0                                               *
+ *  Release Build   : 1.2.0                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
@@ -30,8 +30,9 @@
  *  The most recent version of this package is available at github.       *
  *                                                                        *
  *************************************************************************/
-#ifndef __MY_STRUCT__
-#define __MY_STRUCT__
+#ifndef __INCLUDED_MY_AXI_STRUCT_H__
+#define __INCLUDED_MY_AXI_STRUCT_H__
+
 struct my_axi4_config {
   enum {
     dataWidth = 16,
@@ -52,4 +53,6 @@ typedef axi::axi4_segment<my_axi4_config> local_axi;
 typedef axi::axi4_segment<axi::cfg::standard> local_axi64;
 typedef typename axi::axi4<axi::cfg::lite_nowstrb> local_axi4_lite;
 typedef typename axi::axi4_segment<axi::cfg::lite_nowstrb> local_axi4_lite_segment;
+
 #endif
+

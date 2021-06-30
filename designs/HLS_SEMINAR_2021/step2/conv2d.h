@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.1                                                 *
+ *  Software Version: 1.2                                                 *
  *                                                                        *
- *  Release Date    : Fri Jun  4 11:46:59 PDT 2021                        *
+ *  Release Date    : Wed Jun 30 11:14:16 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.1.0                                               *
+ *  Release Build   : 1.2.0                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
@@ -36,7 +36,6 @@
 #include "types.h"
 #include <ac_int.h>
 #include <ac_sync.h>
-
 
 // convolution with stride 1 and odd size kernel
 

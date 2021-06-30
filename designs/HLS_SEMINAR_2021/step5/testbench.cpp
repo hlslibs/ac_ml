@@ -2,11 +2,11 @@
  *                                                                        *
  *  Algorithmic C (tm) Math Library                                       *
  *                                                                        *
- *  Software Version: 1.1                                                 *
+ *  Software Version: 1.2                                                 *
  *                                                                        *
- *  Release Date    : Fri Jun  4 11:46:59 PDT 2021                        *
+ *  Release Date    : Wed Jun 30 11:14:16 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.1.0                                               *
+ *  Release Build   : 1.2.0                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
@@ -197,7 +197,6 @@ public:
     BIAS_OFFSET_TYPE boffset;
     HEIGHT_TYPE fmap_height;
     WIDTH_TYPE fmap_width;
-    int stride = 2;
 
     wt_offset = WEIGHT_OFFSET;
     tb_w_master.single_write(offsetof(address_map, weight_offset), wt_offset);

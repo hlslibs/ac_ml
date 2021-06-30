@@ -2,11 +2,11 @@
  *                                                                        *
  *  Algorithmic C (tm) Math Library                                       *
  *                                                                        *
- *  Software Version: 1.1                                                 *
+ *  Software Version: 1.2                                                 *
  *                                                                        *
- *  Release Date    : Fri Jun  4 11:46:59 PDT 2021                        *
+ *  Release Date    : Wed Jun 30 11:14:16 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.1.0                                               *
+ *  Release Build   : 1.2.0                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
@@ -142,12 +142,12 @@ public:
       // Check for DUT memory read request
       if (!rd) {
         rd = mem_in_addr.PopNB(rd_addr);
-        rb = mem_in_burst.PopNB(rd_burst);
+        rb = mem_in_burst.PopNB(rd_burst); (void) rb; // return value unused
       }
       // Check for CPU memory read request
       if (!rd_cpu) {
         rd_cpu = mem_in_addr_cpu.PopNB(rd_addr_cpu);
-        rb_cpu = mem_in_burst_cpu.PopNB(rd_burst_cpu);
+        rb_cpu = mem_in_burst_cpu.PopNB(rd_burst_cpu); (void)rb_cpu; // return value unused
       }
       int rd_offset = 0;
       // Give priority to accelerator
@@ -192,11 +192,11 @@ public:
 
       if (!wr) {
         wr = mem_out_addr.PopNB(wr_addr);
-        wb = mem_out_burst.PopNB(wr_burst);
+        wb = mem_out_burst.PopNB(wr_burst); (void)wb; // return value unused
       }
       if (!wr_cpu) {
         wr_cpu = mem_out_addr_cpu.PopNB(wr_addr_cpu);
-        wb_cpu = mem_out_burst_cpu.PopNB(wr_burst_cpu);
+        wb_cpu = mem_out_burst_cpu.PopNB(wr_burst_cpu); (void)wb_cpu; // return value unused
       }
 
       int wr_offset = 0;

@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.1                                                 *
+ *  Software Version: 1.2                                                 *
  *                                                                        *
- *  Release Date    : Fri Jun  4 11:46:59 PDT 2021                        *
+ *  Release Date    : Wed Jun 30 11:14:16 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.1.0                                               *
+ *  Release Build   : 1.2.0                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
@@ -31,11 +31,12 @@
  *                                                                        *
  *************************************************************************/
 #pragma once
+
 #include "types.h"
 #include "axi4_segment.h"
 #include "my_axi_struct.h"
 
-//CPU address map
+// CPU address map
 struct address_map {
   uint64_t  num_in_fmaps;
   uint64_t  num_out_fmaps;
@@ -50,28 +51,28 @@ struct address_map {
   uint64_t  pool;
 };
 
-//Bus I/F module with AXI4 master and slave
+// Bus I/F module with AXI4 master and slave
 class bus_interface : public sc_module, public local_axi
 {
 public:
   sc_in<bool> CCS_INIT_S1(clk);
   sc_in<bool> CCS_INIT_S1(rstn);
-//Bus I/Fs
+  // Bus I/Fs
   r_master<> CCS_INIT_S1(r_master0);
   w_master<> CCS_INIT_S1(w_master0);
   typename local_axi4_lite::write::template slave<> CCS_INIT_S1(w_slave0);
 
-//User I/F to DUT
-//Read I/F
+  // User I/F to DUT
+  // Read I/F
   Connections::In<MEM_ADDR_TYPE>  CCS_INIT_S1(mem_in_addr);
   Connections::In<BURST_TYPE>     CCS_INIT_S1(mem_in_burst);
   Connections::Out<DTYPE>         CCS_INIT_S1(mem_in_data);
-//Write I/F
+  // Write I/F
   Connections::In<MEM_ADDR_TYPE>  CCS_INIT_S1(mem_out_addr);
   Connections::In<BURST_TYPE>     CCS_INIT_S1(mem_out_burst);
   Connections::In<DTYPE>          CCS_INIT_S1(mem_out_data);
 
-//DUT configuration status inputs
+  // DUT configuration status inputs
   sc_out<IN_FMAP_TYPE>              CCS_INIT_S1(num_in_fmaps);
   sc_out<OUT_FMAP_TYPE>             CCS_INIT_S1(num_out_fmaps);
   sc_out<HEIGHT_TYPE>               CCS_INIT_S1(height);
@@ -135,7 +136,7 @@ private:
     }
   }
 
-  //Master recieves write requests from DUT and writes data to system memory
+  // Master recieves write requests from DUT and writes data to system memory
   void write_master_process() {
     AXI4_W_SEGMENT_RESET(w_segment0, w_master0);
     mem_out_addr.Reset();

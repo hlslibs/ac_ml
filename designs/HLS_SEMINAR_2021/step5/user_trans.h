@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.1                                                 *
+ *  Software Version: 1.2                                                 *
  *                                                                        *
- *  Release Date    : Fri Jun  4 11:46:59 PDT 2021                        *
+ *  Release Date    : Wed Jun 30 11:14:16 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.1.0                                               *
+ *  Release Build   : 1.2.0                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
@@ -30,8 +30,9 @@
  *  The most recent version of this package is available at github.       *
  *                                                                        *
  *************************************************************************/
-#ifndef __ARRAY_T__
-#define __ARRAY_T__
+#ifndef _INCLUDED_USER_TRANS_H_
+#define _INCLUDED_USER_TRANS_H_
+
 template<typename T,int SIZE>
 struct array_t {
 
@@ -39,10 +40,12 @@ struct array_t {
 
   void Reset() {
 #pragma unroll yes
-    for (int i=0; i<SIZE; i++)
+    for (int i=0; i<SIZE; i++) {
 #pragma unroll yes
-      for (int j=0; j<SIZE; j++)
-      { data[i][j] = 0; }
+      for (int j=0; j<SIZE; j++) {
+        data[i][j] = 0;
+      }
+    }
   }
 
   static const unsigned int width = T::width * SIZE*SIZE;
@@ -53,15 +56,18 @@ struct array_t {
       { m &data[i][j]; }
   }
   inline friend void sc_trace(sc_trace_file *tf, const array_t &v, const std::string &NAME ) {
-    for (int i=0; i<SIZE; i++)
-      for (int j=0; j<SIZE; j++)
-      { sc_trace(tf,v.data[i][j],  NAME + ".data" + std::to_string(i)); }
+    for (int i=0; i<SIZE; i++) {
+      for (int j=0; j<SIZE; j++) {
+        sc_trace(tf,v.data[i][j],  NAME + ".data" + std::to_string(i));
+      }
+    }
   }
   inline friend std::ostream &operator<<(ostream &os, const array_t &rhs) {
-
-    for (int i=0; i<SIZE; i++)
-      for (int j=0; j<SIZE; j++)
-      { os << rhs.data[i][j] << " "; }
+    for (int i=0; i<SIZE; i++) {
+      for (int j=0; j<SIZE; j++) {
+        os << rhs.data[i][j] << " ";
+      }
+    }
     return os;
   }
 };

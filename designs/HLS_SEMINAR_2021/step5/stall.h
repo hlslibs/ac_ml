@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.1                                                 *
+ *  Software Version: 1.2                                                 *
  *                                                                        *
- *  Release Date    : Fri Jun  4 11:46:59 PDT 2021                        *
+ *  Release Date    : Wed Jun 30 11:14:16 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.1.0                                               *
+ *  Release Build   : 1.2.0                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
@@ -30,8 +30,8 @@
  *  The most recent version of this package is available at github.       *
  *                                                                        *
  *************************************************************************/
-#ifndef __STALL__
-#define __STALL__
+#ifndef _INCLUDED_STALL_H_
+#define _INCLUDED_STALL_H_
 
 static void rand_stall(int n, int s)
 {

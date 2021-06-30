@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.1                                                 *
+ *  Software Version: 1.2                                                 *
  *                                                                        *
- *  Release Date    : Fri Jun  4 11:46:59 PDT 2021                        *
+ *  Release Date    : Wed Jun 30 11:14:16 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.1.0                                               *
+ *  Release Build   : 1.2.0                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
@@ -47,15 +47,15 @@ void biasAlg(
 )
 {
   DTYPE data,max;
-  IFM:for (int ifm=0; ifm<IN_FMAP; ifm++) { // input feature map
-    ROW:for (int r=0; r<MAX_HEIGHT; r++) { // process feature map
+  IFM: for (int ifm=0; ifm<IN_FMAP; ifm++) { // input feature map
+    ROW: for (int r=0; r<MAX_HEIGHT; r++) { // process feature map
       int idx = read_offset + ifm*height*width + r*width;
       mem_in_addr_cpu.Push(idx);
       mem_in_burst_cpu.Push(width);
       idx = write_offset + ifm*height*width + r*width;
       mem_out_addr_cpu.Push(idx);
       mem_out_burst_cpu.Push(width);
-      COL:for (int c=0; c<MAX_WIDTH; c++) {
+      COL: for (int c=0; c<MAX_WIDTH; c++) {
         DTYPE dat = mem_in_data_cpu.Pop();
         SAT_TYPE d = dat + bias[bias_offset + ifm];
         wait(50);

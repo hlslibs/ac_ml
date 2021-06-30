@@ -2,11 +2,11 @@
  *                                                                        *
  *  Algorithmic C (tm) Math Library                                       *
  *                                                                        *
- *  Software Version: 1.1                                                 *
+ *  Software Version: 1.2                                                 *
  *                                                                        *
- *  Release Date    : Fri Jun  4 11:46:59 PDT 2021                        *
+ *  Release Date    : Wed Jun 30 11:14:16 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.1.0                                               *
+ *  Release Build   : 1.2.0                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
@@ -76,11 +76,11 @@ public:
   sc_signal<OFFSET_TYPE>                CCS_INIT_S1(write_offset);
   sc_signal<OFFSET_TYPE>                CCS_INIT_S1(weight_offset);
   sc_signal<BIAS_OFFSET_TYPE>           CCS_INIT_S1(bias_offset);
-  sc_signal<bool>                       CCS_INIT_S1(pointwise);//true does 1x1 convolution
-  sc_signal<bool>                       CCS_INIT_S1(relu);//enable/disable RELU
-  sc_signal<uint2>                      CCS_INIT_S1(pool);//Max pooling, 1=stride 1,2=stride 2
+  sc_signal<bool>                       CCS_INIT_S1(pointwise); // true does 1x1 convolution
+  sc_signal<bool>                       CCS_INIT_S1(relu); // enable/disable RELU
+  sc_signal<uint2>                      CCS_INIT_S1(pool); // Max pooling, 1=stride 1,2=stride 2
 
-  //System memory
+  // System memory
   DTYPE *mem ;
 
   CCS_DESIGN(conv2d) CCS_INIT_S1(conv2d3x3);
@@ -150,11 +150,11 @@ public:
       bool rb_cpu = false;
       if (!rd) {
         rd = mem_in_addr.PopNB(rd_addr);
-        rb = mem_in_burst.PopNB(rd_burst);
+        rb = mem_in_burst.PopNB(rd_burst); (void)rb; // return value unused
       }
       if (!rd_cpu) {
         rd_cpu = mem_in_addr_cpu.PopNB(rd_addr_cpu);
-        rb_cpu = mem_in_burst_cpu.PopNB(rd_burst_cpu);
+        rb_cpu = mem_in_burst_cpu.PopNB(rd_burst_cpu); (void)rb_cpu; // return value unused
       }
       int rd_offset = 0;
       //Give priority to accelerator
@@ -198,11 +198,11 @@ public:
       bool wb_cpu = false;
       if (!wr) {
         wr = mem_out_addr.PopNB(wr_addr);
-        wb = mem_out_burst.PopNB(wr_burst);
+        wb = mem_out_burst.PopNB(wr_burst); (void)wb; // return value unused
       }
       if (!wr_cpu) {
         wr_cpu = mem_out_addr_cpu.PopNB(wr_addr_cpu);
-        wb_cpu = mem_out_burst_cpu.PopNB(wr_burst_cpu);
+        wb_cpu = mem_out_burst_cpu.PopNB(wr_burst_cpu); (void)wb_cpu; // return value unused
       }
       int wr_offset = 0;
       //Give priority to accelerator
@@ -235,8 +235,6 @@ public:
     mem_out_burst_cpu.ResetWrite();
     mem_out_data_cpu.ResetWrite();
     wait();
-
-    DTYPE bias_mem[BIAS_SIZE];
 
     // File IO
     string kernel_filename(d_fileio_dir);
@@ -322,7 +320,6 @@ public:
     BIAS_OFFSET_TYPE boffset;
     HEIGHT_TYPE fmap_height;
     WIDTH_TYPE fmap_width;
-    int stride = 2;
 
     wt_offset = WEIGHT_OFFSET;
     weight_offset.write(wt_offset);

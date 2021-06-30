@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.1                                                 *
+ *  Software Version: 1.2                                                 *
  *                                                                        *
- *  Release Date    : Fri Jun  4 11:46:59 PDT 2021                        *
+ *  Release Date    : Wed Jun 30 11:14:16 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.1.0                                               *
+ *  Release Build   : 1.2.0                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
@@ -35,7 +35,6 @@
 #include "axi4_segment.h"
 #include "my_axi_struct.h"
 #include "types.h"
-
 
 /**
  *  \brief A simple RAM module with 1 axi4 read slave and 1 axi4 write slave
@@ -80,7 +79,6 @@ public:
 
   void slave_r_process() {
     r_slave0.reset();
-
 
     wait();
 

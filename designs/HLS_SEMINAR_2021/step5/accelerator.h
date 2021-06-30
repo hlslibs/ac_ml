@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.1                                                 *
+ *  Software Version: 1.2                                                 *
  *                                                                        *
- *  Release Date    : Fri Jun  4 11:46:59 PDT 2021                        *
+ *  Release Date    : Wed Jun 30 11:14:16 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.1.0                                               *
+ *  Release Build   : 1.2.0                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
@@ -30,27 +30,30 @@
  *  The most recent version of this package is available at github.       *
  *                                                                        *
  *************************************************************************/
-#ifndef __ACCEL__
-#define __ACCEL__
+#ifndef _INCLUDED_ACCELERATOR_H_
+#define _INCLUDED_ACCELERATOR_H_
+
 #include "bus_interface.h"
 #include "conv2d_combined.h"
+
 #include <mc_scverify.h>
+
 #pragma hls_design top
 class accelerator : public sc_module, public local_axi
 {
 public:
   sc_in<bool> CCS_INIT_S1(clk);
   sc_in<bool> CCS_INIT_S1(rstn);
-//Bus I/Fs
+  // Bus I/Fs
   r_master<> CCS_INIT_S1(r_master0);
   w_master<> CCS_INIT_S1(w_master0);
   typename local_axi4_lite::write::template slave<> CCS_INIT_S1(w_slave0);
-//User side
-//Read
+  // User side
+  // Read
   Connections::Combinational<MEM_ADDR_TYPE>  CCS_INIT_S1(mem_in_addr);
   Connections::Combinational<BURST_TYPE>     CCS_INIT_S1(mem_in_burst);
   Connections::Combinational<DTYPE>         CCS_INIT_S1(mem_in_data);
-//Write
+  // Write
   Connections::Combinational<MEM_ADDR_TYPE>  CCS_INIT_S1(mem_out_addr);
   Connections::Combinational<BURST_TYPE>     CCS_INIT_S1(mem_out_burst);
   Connections::Combinational<DTYPE>          CCS_INIT_S1(mem_out_data);
@@ -58,7 +61,7 @@ public:
   Connections::SyncIn CCS_INIT_S1(start);
   Connections::SyncOut CCS_INIT_S1(done);
 
-//Accelerator config
+  // Accelerator config
   sc_signal<IN_FMAP_TYPE>              CCS_INIT_S1(num_in_fmaps);
   sc_signal<OUT_FMAP_TYPE>             CCS_INIT_S1(num_out_fmaps);
   sc_signal<HEIGHT_TYPE>               CCS_INIT_S1(height);
@@ -119,8 +122,7 @@ public:
     conv2d_inst.pool(pool);
     conv2d_inst.start(start);
     conv2d_inst.done(done);
-
   }
-
 };
 #endif
+

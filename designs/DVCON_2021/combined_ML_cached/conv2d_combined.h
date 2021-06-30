@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.1                                                 *
+ *  Software Version: 1.2                                                 *
  *                                                                        *
- *  Release Date    : Fri Jun  4 11:46:59 PDT 2021                        *
+ *  Release Date    : Wed Jun 30 11:14:16 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.1.0                                               *
+ *  Release Build   : 1.2.0                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
@@ -106,9 +106,7 @@ public:
     bias_chan.ResetWrite();
     sync_chan.ResetWrite();
     start.Reset();
-    DTYPE mem_data = 0;
     array_t<DTYPE,KSIZE> weights;
-    ACC_TYPE acc = 0;
     for (int kr=0; kr<KSIZE; kr++) { // odd size kernel
       for (int kc=0; kc<KSIZE; kc++) { // odd size kernel
         weights.data[kr][kc] = 0;
@@ -229,7 +227,6 @@ public:
         // Write output feature map
         unsigned int out_idx = 0;
         int burst_size;
-        DTYPE out_data = 0;
         bool send_data = false;
         uint2 pool_i = pool.read();
         WIDTH_TYPE width_i = width.read();
