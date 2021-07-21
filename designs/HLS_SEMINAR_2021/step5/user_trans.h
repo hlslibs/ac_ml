@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.2                                                 *
+ *  Software Version: 1.4                                                 *
  *                                                                        *
- *  Release Date    : Wed Jun 30 11:14:16 PDT 2021                        *
+ *  Release Date    : Wed Jul 21 10:23:21 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.2.0                                               *
+ *  Release Build   : 1.4.0                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
@@ -51,9 +51,9 @@ struct array_t {
   static const unsigned int width = T::width * SIZE*SIZE;
 
   template <unsigned int Size> void Marshall(Marshaller<Size> &m) {
-    for (int i=0; i<SIZE; i++)
-      for (int j=0; j<SIZE; j++)
-      { m &data[i][j]; }
+    for (int i=0; i<SIZE; i++) {
+      for (int j=0; j<SIZE; j++) { m &data[i][j]; }
+    }
   }
   inline friend void sc_trace(sc_trace_file *tf, const array_t &v, const std::string &NAME ) {
     for (int i=0; i<SIZE; i++) {

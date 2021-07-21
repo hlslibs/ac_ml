@@ -91,8 +91,19 @@ checkvar_AC_SIMUTILS: $(AC_SIMUTILS)/include/mc_scverify.h
 checkvars: checkvar_SYSTEMC_HOME checkvar_CONNECTIONS_HOME checkvar_MATCHLIB_HOME checkvar_AC_TYPES checkvar_AC_SIMUTILS
 # =====================================================================
 
-# Determine the director containing the source files from the path to this Makefile
-SOURCE_DIR = $(dir $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST)))
+# Export variables to any sub-invoked Make
+export CATAPULT_HOME
+export SYSTEMC_HOME
+export CONNECTIONS_HOME
+export MATCHLIB_HOME
+export AC_TYPES
+export AC_SIMUTILS
+export LD_LIBRARY_PATH
+
+# Determine the directory containing the source files from the path to this Makefile (var has trailing slash)
+PWD := $(shell pwd)
+SOURCE_DIR1 = $(dir $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST)))
+SOURCE_DIR = $(if $(subst ./,,$(SOURCE_DIR1)),$(SOURCE_DIR1),$(PWD)/)
 
 INCDIRS := -I$(SOURCE_DIR)
 INCDIRS += -I$(SYSTEMC_HOME)/include -I$(SYSTEMC_HOME)/src
@@ -100,16 +111,16 @@ INCDIRS += -I$(CONNECTIONS_HOME)/include
 INCDIRS += -I$(MATCHLIB_HOME)/cmod/include
 INCDIRS += -I$(AC_TYPES)/include
 INCDIRS += -I$(AC_SIMUTILS)/include
-INCDIRS += -I../include
+INCDIRS += -I$(SOURCE_DIR)../include
 
-CPPFLAGS += $(INCDIRS)
-CPPFLAGS_FAST = $(INCDIRS)
+CPPFLAGS       = $(INCDIRS)
+CPPFLAGS_FAST  = $(INCDIRS)
+CPPFLAGS      += -DCONNECTIONS_ACCURATE_SIM -DSC_INCLUDE_DYNAMIC_PROCESSES -DCONN_RAND_STALL
 CPPFLAGS_FAST += -DCONNECTIONS_FAST_SIM -DSC_INCLUDE_DYNAMIC_PROCESSES -O3
-CPPFLAGS += -DCONNECTIONS_ACCURATE_SIM -DSC_INCLUDE_DYNAMIC_PROCESSES
 
 LIBS += -lsystemc -lpthread
 
-.PHONY: all build run fast clean sim_clean
+.PHONY: all build run fast clean sim_clean syn_clean
 
 fast: run_fast
 
@@ -152,11 +163,21 @@ view_wave: trace.wlf
 	vsim $< -nolog -do "add wave -r trace:/SystemC/*" -do "wave zoom full"
 
 sim_clean:
-	@rm -rf sim_*
+	@rm -rf sim_* *.vcd *.wlf mylog* bias.txt kernel.txt kernel.txt.gz output.txt data.txt chan_log_data.txt chan_log_names.txt
+
+
+syn_clean:
+	@rm -rf Catapult Catapult.ccs catapult.log design_check_*
+
+clean: sim_clean syn_clean
+	@rm -rf  .log .vscode 
 
 help:
-	-@echo "Makefile targets:"
+	-@echo "Please refer to README.txt for details on this example and instructions on how to run it"
+	-@echo ""
+	-@echo "Makefile targets for SystemC Model Simulation:"
 	-@echo "  clean     - Clean up from previous make runs"
+	-@echo "  checkvars - Check for proper environment variable settings"
 	-@echo "  fast      - Perform simulation using connections FAST mode"
 	-@echo "  all       - Perform all of the targets below"
 	-@echo "  sim_sc    - Compile SystemC design"
@@ -177,6 +198,4 @@ help:
 	-@echo "  INCDIRS            = $(INCDIRS)"
 	-@echo ""
 
-clean: sim_clean
-	@rm -rf *.vcd *.wlf design_check* my_log* catapult.log .vscode bias.txt kernel.txt kernel.txt.gz output.txt data.txt
 

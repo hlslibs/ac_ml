@@ -91,8 +91,19 @@ checkvar_AC_SIMUTILS: $(AC_SIMUTILS)/include/mc_scverify.h
 checkvars: checkvar_SYSTEMC_HOME checkvar_CONNECTIONS_HOME checkvar_MATCHLIB_HOME checkvar_AC_TYPES checkvar_AC_SIMUTILS
 # =====================================================================
 
-# Determine the director containing the source files from the path to this Makefile
-SOURCE_DIR = $(dir $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST)))
+# Export variables to any sub-invoked Make
+export CATAPULT_HOME
+export SYSTEMC_HOME
+export CONNECTIONS_HOME
+export MATCHLIB_HOME
+export AC_TYPES
+export AC_SIMUTILS
+export LD_LIBRARY_PATH
+
+# Determine the directory containing the source files from the path to this Makefile (var has trailing slash)
+PWD := $(shell pwd)
+SOURCE_DIR1 = $(dir $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST)))
+SOURCE_DIR = $(if $(subst ./,,$(SOURCE_DIR1)),$(SOURCE_DIR1),$(PWD)/)
 
 INCDIRS := -I$(SOURCE_DIR)
 INCDIRS += -I$(SYSTEMC_HOME)/include -I$(SYSTEMC_HOME)/src
@@ -100,7 +111,7 @@ INCDIRS += -I$(CONNECTIONS_HOME)/include
 INCDIRS += -I$(MATCHLIB_HOME)/cmod/include
 INCDIRS += -I$(AC_TYPES)/include
 INCDIRS += -I$(AC_SIMUTILS)/include
-INCDIRS += -I../include
+INCDIRS += -I$(SOURCE_DIR)../include
 
 CPPFLAGS += $(INCDIRS)
 CPPFLAGS_FAST = $(INCDIRS)

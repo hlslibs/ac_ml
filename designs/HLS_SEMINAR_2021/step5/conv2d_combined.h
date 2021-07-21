@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.2                                                 *
+ *  Software Version: 1.4                                                 *
  *                                                                        *
- *  Release Date    : Wed Jun 30 11:14:16 PDT 2021                        *
+ *  Release Date    : Wed Jul 21 10:23:21 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.2.0                                               *
+ *  Release Build   : 1.4.0                                               *
  *                                                                        *
  *  Copyright , Mentor Graphics Corporation,                     *
  *                                                                        *
@@ -315,9 +315,11 @@ public:
             if (r < MAX_HEIGHT && c < MAX_WIDTH) {
               add_bias = acc_buf[r][c] + bias; // bias
             }
-            if (relu_i)
-              if (add_bias < 0) // RELU
-              { add_bias = add_bias * SAT_TYPE(0.1); }
+            if (relu_i) {
+              if (add_bias < 0) {// RELU
+                add_bias = add_bias * SAT_TYPE(0.1); 
+              }
+            }
             if (pool_i==0) {
               mem_out_data.Push(SAT_TYPE(add_bias));
             } else {
