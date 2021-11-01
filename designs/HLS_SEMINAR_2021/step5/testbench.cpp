@@ -2,13 +2,13 @@
  *                                                                        *
  *  Algorithmic C (tm) Math Library                                       *
  *                                                                        *
- *  Software Version: 1.4                                                 *
+ *  Software Version: 1.5                                                 *
  *                                                                        *
- *  Release Date    : Wed Jul 21 10:23:21 PDT 2021                        *
+ *  Release Date    : Mon Nov  1 05:56:21 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.4.0                                               *
+ *  Release Build   : 1.5.0                                               *
  *                                                                        *
- *  Copyright , Mentor Graphics Corporation,                     *
+ *  Copyright 2021, Mentor Graphics Corporation,                     *
  *                                                                        *
  *  All Rights Reserved.                                                  *
  *  
@@ -54,9 +54,9 @@ public:
   sc_clock clk;
   SC_SIG(bool, rstn);
 
-  local_axi4_lite::write::template chan<> CCS_INIT_S1(dma_w_slave);//AXI4 slave channel
-  w_chan<> CCS_INIT_S1(dma_w_master);//AXI4 write master channel
-  r_chan<> CCS_INIT_S1(dma_r_master);//AXI4 read master channel
+  local_axi4_lite::write::template chan<> CCS_INIT_S1(dma_w_slave);   // AXI4 slave channel
+  w_chan<>                                CCS_INIT_S1(dma_w_master);  // AXI4 write master channel
+  r_chan<>                                CCS_INIT_S1(dma_r_master);  // AXI4 read master channel
 
   local_axi4_lite_segment::template w_master<>    CCS_INIT_S1(tb_w_master);
 
@@ -246,14 +246,14 @@ public:
       } else {
         tb_w_master.single_write(offsetof(address_map, pool), 0);
       }
-      rand_stall(7,7);
+      INSERT_RAND_STALL;
       start.sync_out();
 
       //Wait for done to force stall
       while (!done.vld) {
         wait();
       }
-      rand_stall(7,7);
+      INSERT_RAND_STALL;
       done.sync_in();
       wait(100);
 

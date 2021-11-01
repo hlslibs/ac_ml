@@ -1,4 +1,4 @@
-This example implements an ML convolution in SystemC using MathcLib.  It is written algorithmically so the performce is poor due to redundant memory reads for the weights and feature map data
+This example implements an ML convolution in SystemC using MatchLib.  It is written algorithmically so the performce is poor due to redundant memory reads for the weights and feature map data
 
 Files:
   conv2d.h - implements just convolution

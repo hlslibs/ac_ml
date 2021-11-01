@@ -1,4 +1,4 @@
-This example implements an ML convolution in SystemC using MathcLib.
+This example implements an ML convolution in SystemC using MatchLib.
 It is written to add a sliding-window memory architecture to reduce redundant memory reads and to achieve higher performance
 
 Files:

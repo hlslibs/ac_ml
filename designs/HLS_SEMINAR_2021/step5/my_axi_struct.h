@@ -2,16 +2,14 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.4                                                 *
+ *  Software Version: 1.5                                                 *
  *                                                                        *
- *  Release Date    : Wed Jul 21 10:23:21 PDT 2021                        *
+ *  Release Date    : Mon Nov  1 05:56:21 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.4.0                                               *
+ *  Release Build   : 1.5.0                                               *
  *                                                                        *
- *  Copyright , Mentor Graphics Corporation,                     *
+ *  Copyright 2021 Siemens                                                *
  *                                                                        *
- *  All Rights Reserved.                                                  *
- *  
  **************************************************************************
  *  Licensed under the Apache License, Version 2.0 (the "License");       *
  *  you may not use this file except in compliance with the License.      * 
@@ -33,6 +31,8 @@
 #ifndef __INCLUDED_MY_AXI_STRUCT_H__
 #define __INCLUDED_MY_AXI_STRUCT_H__
 
+// Define a custom configuration of an AXI4 bus
+
 struct my_axi4_config {
   enum {
     dataWidth = 16,
@@ -49,10 +49,25 @@ struct my_axi4_config {
   };
 };
 
-typedef axi::axi4_segment<my_axi4_config> local_axi;
-typedef axi::axi4_segment<axi::cfg::standard> local_axi64;
-typedef typename axi::axi4<axi::cfg::lite_nowstrb> local_axi4_lite;
-typedef typename axi::axi4_segment<axi::cfg::lite_nowstrb> local_axi4_lite_segment;
+//-------------------------------------------------------------------------------------
+// Create typedefs for various AXI4 bus configurations to use as a shorthand 
+// to simplify building the SystemC AXI structure.
+// Example:
+//   Create an SC_MODULE that is an object on the AXI4 bus configured as 'local_axi'
+//     class my_object_on_local_axi : public sc_module, public local_axi {
+//     };
+
+// Shorthand typedef for our custom AXI4 bus "my_axi4_config"
+typedef axi::axi4_segment<my_axi4_config>                       local_axi;
+
+// Shorthand typedef for the standard AXI4 64bit bus
+typedef axi::axi4_segment<axi::cfg::standard>                   local_axi64;
+
+// Shorthand typedef for the standard AXI4 Lite bus
+typedef typename axi::axi4<axi::cfg::lite_nowstrb>              local_axi4_lite;
+
+// Shorthand typedef for a AXI4 segment of an AXI4 Lite bus
+typedef typename axi::axi4_segment<axi::cfg::lite_nowstrb>      local_axi4_lite_segment;
 
 #endif
 

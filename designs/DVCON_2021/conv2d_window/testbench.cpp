@@ -2,13 +2,13 @@
  *                                                                        *
  *  Algorithmic C (tm) Math Library                                       *
  *                                                                        *
- *  Software Version: 1.4                                                 *
+ *  Software Version: 1.5                                                 *
  *                                                                        *
- *  Release Date    : Wed Jul 21 10:23:21 PDT 2021                        *
+ *  Release Date    : Mon Nov  1 05:56:21 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.4.0                                               *
+ *  Release Build   : 1.5.0                                               *
  *                                                                        *
- *  Copyright , Mentor Graphics Corporation,                     *
+ *  Copyright 2021, Mentor Graphics Corporation,                     *
  *                                                                        *
  *  All Rights Reserved.                                                  *
  *  

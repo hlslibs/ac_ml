@@ -1,0 +1,128 @@
+
+#========== Versions ============================#
+
+QUESTA_VERSION          ?= 2020.3
+
+#========== Location Specific Settings ==========#
+
+export QUESTA_HOME      =  /wv/hlstools/questasim/2020.3_2/questasim
+
+#================================================#
+CC            = $(CATAPULT_HOME)/bin/gcc
+CPP           = $(CATAPULT_HOME)/bin/g++
+
+VLOG=$(QUESTA_HOME)/bin/vlog
+VSIM=$(QUESTA_HOME)/bin/vsim
+VLIB=$(QUESTA_HOME)/bin/vlib
+VMAP=$(QUESTA_HOME)/bin/vmap
+
+# Determine the directory containing the source files from the path to this Makefile (var has trailing slash)
+PWD := $(shell pwd)
+SOURCE_DIR1 = $(dir $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST)))
+SOURCE_DIR = $(if $(subst ./,,$(SOURCE_DIR1)),$(SOURCE_DIR1),$(PWD)/)
+
+hw_sources    = $(SOURCE_DIR)rocket_design
+
+VLOG_FLAGS    = +acc=all +incdir+$(hw_sources)
+VSIM_FLAGS    = -voptargs=+acc -work work -L rocket_lib
+
+CRUFT         =  transcript vsim.wlf modelsim.ini trace_core*.log wlf* 
+
+marker_dir    = ./marker_dir
+work          = ./work
+
+
+marker_marker = $(marker_dir)/marker.mark
+work_marker   = $(marker_dir)/work.mark
+
+hdl_markers   = $(marker_dir)/addr_gen.sv.mark
+hdl_markers  += $(marker_dir)/axi_addr_latch.sv.mark
+hdl_markers  += $(marker_dir)/axi_byte_enables.sv.mark
+hdl_markers  += $(marker_dir)/axi_data_latch.sv.mark
+hdl_markers  += $(marker_dir)/axi_matrix.sv.mark
+hdl_markers  += $(marker_dir)/axi_segment_arbiter.sv.mark
+hdl_markers  += $(marker_dir)/axi_slave_if.sv.mark
+hdl_markers  += $(marker_dir)/axi_slave_segment.sv.mark
+hdl_markers  += $(marker_dir)/bus_fifo.sv.mark
+hdl_markers  += $(marker_dir)/mux.sv.mark
+hdl_markers  += $(marker_dir)/ready_gen.sv.mark
+hdl_markers  += $(marker_dir)/rocket_subsystem.sv.mark
+hdl_markers  += $(marker_dir)/sram.sv.mark
+
+.PHONY: compile rocket_lib
+
+all: compile
+
+compile: rocket_lib $(marker_marker) $(work_marker) $(hdl_markers) 
+
+rocket_lib:
+	@echo "MAKE    rocket_lib"
+	@$(MAKE) -f $(SOURCE_DIR)Makefile.rocket_lib
+
+$(marker_dir)/axi_addr_latch.sv.mark: $(hw_sources)/axi_addr_latch.sv $(hw_sources)/axi_bus_defines.svh
+	@echo "VLOG   " $<
+	@$(VLOG) $(VLOG_FLAGS) $< >> make.out
+	@touch $@
+
+$(marker_dir)/axi_matrix.sv.mark: $(hw_sources)/axi_matrix.sv $(hw_sources)/axi_bus_defines.svh
+	@echo "VLOG   " $<
+	@$(VLOG) $(VLOG_FLAGS) $< >> make.out
+	@touch $@
+
+$(marker_dir)/axi_slave_if.sv.mark: $(hw_sources)/axi_slave_if.sv $(hw_sources)/axi_bus_defines.svh
+	@echo "VLOG   " $<
+	@$(VLOG) $(VLOG_FLAGS) $< >> make.out
+	@touch $@
+
+$(marker_dir)/rocket_subsystem.sv.mark: $(hw_sources)/rocket_subsystem.sv $(hw_sources)/axi_bus_defines.svh
+	@echo "VLOG   " $<
+	@$(VLOG) $(VLOG_FLAGS) $< >> make.out
+	@touch $@
+
+#====== Generic compile rules ======
+#
+# note: create specific compile rules to
+#       manage include dependencies
+#
+
+$(object_dir)/%.o: %.cpp
+	@echo "CC     " $<
+	@$(GCC) $(CFLAGS) $(INCLUDES) -c -o $@ $< >> make.out
+
+$(marker_dir)/%.sv.mark: $(hw_sources)/%.sv
+	@echo "VLOG   " $<
+	@$(VLOG) $(VLOG_FLAGS) $< >> make.out
+	@touch $@
+
+$(marker_dir)/%.v.mark: $(hw_sources)/%.v
+	@echo "VLOG   " $<
+	@$(VLOG) $(VLOG_FLAGS) $< >> make.out
+	@touch $@
+
+$(marker_dir)/%.sc.mark: $(hw_sources)/%.cpp
+	@echo "SCCOM  " $<
+	@$(SCCOM) $(SCC_FLAGS) $< >> make.out
+	@touch $@
+
+
+#====== Working directories ========
+
+$(marker_marker):
+	@echo " "
+	@echo "  All tool output is redirected to \"make.out\" "
+	@echo " "
+	@echo "MKDIR  " $@
+	@mkdir $(marker_dir) >> make.out
+	@touch $@
+
+$(work_marker):
+	@echo "VLIB   " $(work)
+	@$(VLIB) $(work) >> make.out
+	@echo "VMAP   " -work $(work)
+	@$(VMAP) work $(work) >> make.out
+	@touch $@
+
+#=== Clean-up
+
+clean:
+	rm -rf $(work_dir) $(marker_dir) $(CRUFT)

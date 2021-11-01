@@ -2,16 +2,14 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.4                                                 *
+ *  Software Version: 1.5                                                 *
  *                                                                        *
- *  Release Date    : Wed Jul 21 10:23:21 PDT 2021                        *
+ *  Release Date    : Mon Nov  1 05:56:21 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.4.0                                               *
+ *  Release Build   : 1.5.0                                               *
  *                                                                        *
- *  Copyright , Mentor Graphics Corporation,                     *
+ *  Copyright 2021 Siemens                                                *
  *                                                                        *
- *  All Rights Reserved.                                                  *
- *  
  **************************************************************************
  *  Licensed under the Apache License, Version 2.0 (the "License");       *
  *  you may not use this file except in compliance with the License.      * 
@@ -56,8 +54,8 @@ enum {
   ACCU_MAX_WIDTH_INT = DTYPE::i_width*2 + ac::nbits<KSIZE*KSIZE+IN_FMAP>::val,
   HEIGHT_BITS = ac::nbits<MAX_HEIGHT>::val,
   WIDTH_BITS = ac::nbits<MAX_WIDTH>::val,
-  IN_FMAP_BITS = ac::nbits<IN_FMAP>::val,
-  OUT_FMAP_BITS = ac::nbits<OUT_FMAP>::val,
+  IN_FMAP_BITS = ac::log2_ceil<IN_FMAP>::val,
+  OUT_FMAP_BITS = ac::log2_ceil<OUT_FMAP>::val,
   IMG_SIZE = MAX_HEIGHT*MAX_WIDTH,//Max feature map size
   KSIZESQ = KSIZE*KSIZE,//number of kernel elements
   IF_KSIZE = KSIZESQ*IN_FMAP,//number of kernel elements per output channel

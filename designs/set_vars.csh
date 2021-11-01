@@ -28,7 +28,7 @@ if (! -e ./systemc-$SYSCVER ) then
   echo "Downloading and building SystemC $SYSCVER ..."
   rm -f systemc-$SYSCVER.tar.gz
   # Download and build SystemC
-  wget https://www.accellera.org/images/downloads/standards/systemc/systemc-$SYSCVER.tar.gz
+  wget --no-check-certificate https://www.accellera.org/images/downloads/standards/systemc/systemc-$SYSCVER.tar.gz
   /bin/gtar zxf ./systemc-$SYSCVER.tar.gz
   setenv CXX "g++ -std=c++11"
   cd systemc-$SYSCVER

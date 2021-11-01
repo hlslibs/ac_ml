@@ -2,16 +2,14 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.4                                                 *
+ *  Software Version: 1.5                                                 *
  *                                                                        *
- *  Release Date    : Wed Jul 21 10:23:21 PDT 2021                        *
+ *  Release Date    : Mon Nov  1 05:56:21 PDT 2021                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.4.0                                               *
+ *  Release Build   : 1.5.0                                               *
  *                                                                        *
- *  Copyright , Mentor Graphics Corporation,                     *
+ *  Copyright 2021 Siemens                                                *
  *                                                                        *
- *  All Rights Reserved.                                                  *
- *  
  **************************************************************************
  *  Licensed under the Apache License, Version 2.0 (the "License");       *
  *  you may not use this file except in compliance with the License.      * 
@@ -41,7 +39,13 @@
 #undef CONNECTIONS_SIM_ONLY_ASSERT_MSG
 
 #include "axi/axi4.h"
+
+#ifdef MANUAL_RAND_STALL
 #include "stall.h"
+#define INSERT_RAND_STALL rand_stall(7,7)
+#else
+#define INSERT_RAND_STALL ;
+#endif
 
 namespace axi
 {
@@ -129,13 +133,13 @@ namespace axi
         aw_item.addr = addr;
         aw_item.len = 0;
         base::aw.Push(aw_item);
-        rand_stall(7,7);
+        INSERT_RAND_STALL;
 
         w_payload w_item;
         w_item.data = data;
         w_item.last = true;
         base::w.Push(w_item);
-        rand_stall(7,7);
+        INSERT_RAND_STALL;
 
         return base::b.Pop();
       }
@@ -146,7 +150,7 @@ namespace axi
         aw_item.addr = addr & (~byte_field);
         aw_item.len = 0;
         base::aw.Push(aw_item);
-        rand_stall(7,7);
+        INSERT_RAND_STALL;
 
         uint32 mask = (1 << bytes) - 1;
         w_payload w_item;
@@ -154,7 +158,7 @@ namespace axi
         w_item.last = true;
         w_item.wstrb = mask << (addr & byte_field);
         base::w.Push(w_item);
-        rand_stall(7,7);
+        INSERT_RAND_STALL;
 
         return base::b.Pop();
       }
@@ -182,7 +186,7 @@ namespace axi
         ar_item.addr = addr;
         ar_item.len = 0;
         base::ar.Push(ar_item);
-        rand_stall(7,7);
+        INSERT_RAND_STALL;
 
         return base::r.Pop();
       }
@@ -194,9 +198,9 @@ namespace axi
         ar_item.addr = addr & (~byte_field);
         ar_item.len = 0;
         base::ar.Push(ar_item);
-        rand_stall(7,7);
+        INSERT_RAND_STALL;
         r = base::r.Pop();
-        rand_stall(7,7);
+        INSERT_RAND_STALL;
 
         uint64 data_mask = (1 << size) -1;
         r.data = (r.data >> (8 * (addr & byte_field))) & data_mask;
@@ -224,7 +228,7 @@ namespace axi
 
       bool single_read(ar_payload &ret_ar, r_payload &ret_r) {
         ret_ar = base::ar.Pop();
-        rand_stall(7,7);
+        INSERT_RAND_STALL;
 
         ret_r.id = ret_ar.id;
         ret_r.last = true;
@@ -234,12 +238,12 @@ namespace axi
         ret_r.resp = Enc::XRESP::SLVERR;
         ret_r.last = false;
         base::r.Push(ret_r);
-        rand_stall(7,7);
+        INSERT_RAND_STALL;
 
         while (ret_ar.len-- > 0) {
           ret_r.last = (ret_ar.len == 1);
           base::r.Push(ret_r);
-          rand_stall(7,7);
+          INSERT_RAND_STALL;
         }
 
         return false;
@@ -247,7 +251,7 @@ namespace axi
 
       bool start_multi_read(ar_payload &ret_ar) {
         ret_ar = base::ar.Pop();
-        rand_stall(7,7);
+        INSERT_RAND_STALL;
         return true;
       }
 
@@ -257,7 +261,7 @@ namespace axi
         if (ret_ar.len == 0) { ret_r.last = true; }
 
         base::r.Push(ret_r);
-        rand_stall(7,7);
+        INSERT_RAND_STALL;
 
         if (ret_r.last == true) { return false; }
 
@@ -283,27 +287,27 @@ namespace axi
 
       bool get_single_write(aw_payload &ret_aw, w_payload &ret_w, b_payload &ret_b) {
         ret_aw = base::aw.Pop();
-        rand_stall(7,7);
+        INSERT_RAND_STALL;
         ret_w = base::w.Pop();
-        rand_stall(7,7);
+        INSERT_RAND_STALL;
         ret_b.id = ret_aw.id;
 
         if (ret_aw.len == 0) { return true; }
 
         while (ret_aw.len-- > 0) {
           ret_w = base::w.Pop();
-          rand_stall(7,7);
+          INSERT_RAND_STALL;
         }
 
         ret_b.resp = Enc::XRESP::SLVERR;
         base::b.Push(ret_b);
-        rand_stall(7,7);
+        INSERT_RAND_STALL;
         return false;
       }
 
       bool start_multi_write(aw_payload &ret_aw, b_payload &ret_b) {
         ret_aw = base::aw.Pop();
-        rand_stall(7,7);
+        INSERT_RAND_STALL;
         ret_b.id = ret_aw.id;
 
         return true;
@@ -393,7 +397,7 @@ namespace axi
 #pragma pipeline_stall_mode flush
         while (1) {
           ex_aw_payload ex = ex_aw_chan.Pop();
-          rand_stall(7,7);
+          INSERT_RAND_STALL;
           #ifndef __SYNTHESIS__
           if (ex.addr &  (bytesPerBeat-1)) {
             SC_REPORT_ERROR("ex_aw_process", "unaligned address");
@@ -440,20 +444,20 @@ namespace axi
 
             // LOG("aw_out Push: " << aw.len);
             aw_out.Push(aw);
-            rand_stall(7,7);
+            INSERT_RAND_STALL;
 
             #pragma hls_pipeline_init_interval 1
 #pragma pipeline_stall_mode flush
             while (1) {
               bool last = (aw.len == 0);
               last_bit_chan.Push(last);
-              rand_stall(7,7);
+              INSERT_RAND_STALL;
               if (last) { break; }
               --aw.len;
             }
 
             last_burst_chan.Push(last_burst);
-            rand_stall(7,7);
+            INSERT_RAND_STALL;
 
             if (last_burst) { break; }
           }
@@ -470,9 +474,9 @@ namespace axi
 #pragma pipeline_stall_mode flush
         while (1) {
           w_payload w = w_chan.Pop();
-          rand_stall(7,7);
+          INSERT_RAND_STALL;
           w.last = last_bit_chan.Pop();
-          rand_stall(7,7);
+          INSERT_RAND_STALL;
           // LOG("last bit fifo read: " << w.last);
           w_out.Push(w);
         }
@@ -499,7 +503,7 @@ namespace axi
 #pragma pipeline_stall_mode flush
           while (1) {
             b_payload r = b_in.Pop();
-            rand_stall(7,7);
+            INSERT_RAND_STALL;
             // LOG("b read: ");
             if (id_valid) {
               if (comb.id != r.id) {
@@ -515,12 +519,12 @@ namespace axi
             comb.resp = comb.resp | r.resp;
 
             bool last_burst = last_burst_chan.Pop();
-            rand_stall(7,7);
+            INSERT_RAND_STALL;
 
             if (last_burst) {
               // LOG("b_chan_Push: ");
               b_chan.Push(comb);
-              rand_stall(7,7);
+              INSERT_RAND_STALL;
               id_valid = false;
               comb.resp = Enc::XRESP::OKAY;
               break;
@@ -569,7 +573,7 @@ namespace axi
 #pragma pipeline_stall_mode flush
         while (1) {
           ex_ar_payload ex = ex_ar_chan.Pop();
-          rand_stall(7,7);
+          INSERT_RAND_STALL;
           #ifndef __SYNTHESIS__
           if (ex.addr &  (bytesPerBeat-1)) {
             SC_REPORT_ERROR("ex_ar_process", "unaligned address");
@@ -617,7 +621,7 @@ namespace axi
             }
 
             ar_out.Push(ar);
-            rand_stall(7,7);
+            INSERT_RAND_STALL;
 
             if (last_burst) { break; }
           }

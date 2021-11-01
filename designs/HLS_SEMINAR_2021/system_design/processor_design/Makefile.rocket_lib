@@ -1,0 +1,41 @@
+
+QUESTA_VERSION  ?= 2020.3
+#QUESTA_HOME     ?= /u/release/$(QUESTA_VERSION)/modeltech
+export QUESTA_HOME      =  /wv/hlstools/questasim/2020.3_2/questasim
+VLOG             = $(QUESTA_HOME)/bin/vlog
+VMAP             = $(QUESTA_HOME)/bin/vmap
+VLIB             = $(QUESTA_HOME)/bin/vlib
+
+# Assume that the custom rocket core source files are in the directory <this makefile>/../rocket_core
+# Determine the directory containing the source files from the path to this Makefile (var has trailing slash)
+PWD := $(shell pwd)
+SOURCE_DIR1 = $(dir $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST)))
+SOURCE_DIR = $(if $(subst ./,,$(SOURCE_DIR1)),$(SOURCE_DIR1),$(PWD)/)
+
+VFLAGS           = +define+RANDOMIZE_REG_INIT
+VFLAGS          += +define+RANDOMIZE_MEM_INIT 
+VFLAGS          += +define+RANDOMIZE_GARBAGE_ASSIGN 
+VFLAGS          += +define+RANDOMIZE_INVALID_ASSIGN 
+VFLAGS          += +define+RANDOMIZE_DELAY=1
+
+LIBRARY          = rocket_lib
+LIBRARY_DIR      = ./rocket_lib
+
+SOURCES          = $(SOURCE_DIR)rocket_core/vsim/generated-src/freechips.rocketchip.system.DefaultConfig.v 
+SOURCES         += $(ROCKET_CORE_HOME)/src/main/resources/vsrc/AsyncResetReg.v 
+SOURCES         += $(ROCKET_CORE_HOME)/src/main/resources/vsrc/plusarg_reader.v 
+SOURCES         += $(ROCKET_CORE_HOME)/src/main/resources/vsrc/EICG_wrapper.v 
+SOURCES         += $(SOURCE_DIR)rocket_core/vsim/generated-src/freechips.rocketchip.system.DefaultConfig.behav_srams.v
+
+$(LIBRARY): $(SOURCES)
+	@echo "VLIB    $(LIBRARY_DIR)"
+	@$(VLIB) $(LIBRARY_DIR)                                 >> make.out
+	@echo "VMAP    $(LIBRARY) $(LIBRARY_DIR)"
+	@$(VMAP) $(LIBRARY) $(LIBRARY_DIR)                      >> make.out
+
+	@echo "VLOG    $(ROCKET_CORE_HOME)/vsim/generated-src/freechips.rocketchip.system.DefaultConfig.v "
+	@$(VLOG) -work $(LIBRARY) +acc=all $(VFLAGS) $(SOURCES) >> make.out
+
+clean:
+	@echo "RM      $(LIBRARY_DIR)
+	@rm -rf $(LIBRARY_DIR) modelsim.ini                     >> make.out
