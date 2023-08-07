@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.5                                                 *
+ *  Software Version: 1.8                                                 *
  *                                                                        *
- *  Release Date    : Fri Oct 29 16:53:36 PDT 2021                        *
+ *  Release Date    : Sun Jul 16 19:01:51 PDT 2023                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.5.0                                               *
+ *  Release Build   : 1.8.0                                               *
  *                                                                        *
  *  Copyright 2021 Siemens                                                *
  *                                                                        *
@@ -369,9 +369,9 @@ public:
 
   // copy the shift registers to the window array to apply zero padding
   void copy_window() {
-#pragma unroll yes
+#pragma hls_unroll yes
     for (int r=0; r<3; r++) {
-#pragma unroll yes
+#pragma hls_unroll yes
       for (int c=0; c<3; c++) {
         window[r][c] = shift_regs[r][c];
       }
@@ -380,11 +380,11 @@ public:
 
   // shift the data vertically through the line buffer memories
   void shift_line_buffers(int x) {
-#pragma unroll yes
+#pragma hls_unroll yes
     for (int i = 0; i < 2; i++) {//read line buffers, slide the window down
       data[i + 1] = line_buffers[i][x];
     }
-#pragma unroll yes
+#pragma hls_unroll yes
     for (int i = 0; i < 2; i++) {//write the line buffers
       line_buffers[i][x] = data[i];
     }
@@ -392,10 +392,10 @@ public:
 
   // shift the data horizontally through the shift registers
   void shift_registers() {
-#pragma unroll yes
+#pragma hls_unroll yes
     for (int i = 0; i < 3; i++) {
       //shift the shift registers, slide the window to the right
-#pragma unroll yes
+#pragma hls_unroll yes
       for (int j = 2; j >= 0; j--) {
         if (j == 0)
         { shift_regs[i][0] = data[i]; }
@@ -408,7 +408,7 @@ public:
   // zero pad outside the image boundary
   void zero_pad(int y, int x, HEIGHT_TYPE height, WIDTH_TYPE width) {
     // Zero pad window when out of bounds
-#pragma unroll yes
+#pragma hls_unroll yes
     for (int i = 0; i < 3; i++) {
       if (y == 1) {
         window[2][i] = 0;
@@ -426,10 +426,10 @@ public:
 
   // shift the data horizontally through the shift registers
   void shift_pool_registers() {
-#pragma unroll yes
+#pragma hls_unroll yes
     for (int i = 0; i < 2; i++) {
       //shift the shift registers, slide the window to the right
-#pragma unroll yes
+#pragma hls_unroll yes
       for (int j = 1; j >= 0; j--) {
         if (j == 0) {
           pool_regs[i][0] = pool_data[i];

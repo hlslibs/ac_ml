@@ -1,17 +1,15 @@
 /**************************************************************************
  *                                                                        *
- *  Algorithmic C (tm) Math Library                                       *
+ *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.5                                                 *
+ *  Software Version: 1.8                                                 *
  *                                                                        *
- *  Release Date    : Fri Oct 29 16:53:36 PDT 2021                        *
+ *  Release Date    : Sun Jul 16 19:01:51 PDT 2023                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.5.0                                               *
+ *  Release Build   : 1.8.0                                               *
  *                                                                        *
- *  Copyright 2021, Mentor Graphics Corporation,                     *
+ *  Copyright 2021 Siemens                                                *
  *                                                                        *
- *  All Rights Reserved.                                                  *
- *  
  **************************************************************************
  *  Licensed under the Apache License, Version 2.0 (the "License");       *
  *  you may not use this file except in compliance with the License.      * 

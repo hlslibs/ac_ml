@@ -1,9 +1,9 @@
 #! /bin/sh
 
 #================================================================
-# File: set_vars.sh
+# File: set_vars.cs
 #
-# Usage: . set_vars.sh
+# Usage:  . set_vars.sh
 #
 # This script will attempt to download and install/build all of the
 # open-source repositories required to run the MatchLib toolkit examples
@@ -13,7 +13,10 @@
 #    ./sysclocal
 #    ./matchlib_connections
 #    ./matchlib
+#    ./preprocessor
+#    ./rapidjson
 #    ./ac_types
+#    ./ac_math
 #    ./ac_simutils
 
 # It also intentionally unsets CATAPULT_HOME and MGC_HOME
@@ -62,6 +65,29 @@ fi
 MATCHLIB_HOME=`pwd`/matchlib
 export MATCHLIB_HOME
 
+# Configure Boost Preprocessor
+if [ ! -d /Xusr/include/boost/preprocessor/arithmetic ]; then
+  if [ ! -d ./boost_home/include/boost ]; then
+    git clone http://github.com/boostorg/preprocessor
+    git clone http://github.com/boostorg/static_assert
+    mkdir -p boost_home/include/boost
+    mv preprocessor/include/boost/* boost_home/include/boost
+    mv static_assert/include/boost/* boost_home/include/boost
+    rm -rf preprocessor static_assert
+  fi
+  BOOST_HOME=`pwd`/boost_home
+else
+  BOOST_HOME=/usr
+fi
+export BOOST_HOME
+
+# Configure RapidJSON
+if [ ! -d ./rapidjson ]; then
+ git clone http://github.com/Tencent/rapidjson
+endif
+RAPIDJSON_HOME=`pwd`/rapidjson
+export RAPIDJSON_HOME
+
 # Configure AC Datatypes
 if [ ! -d ./ac_types ]; then
   echo "Downloading AC_Types..."
@@ -69,6 +95,14 @@ if [ ! -d ./ac_types ]; then
 fi
 AC_TYPES=`pwd`/ac_types
 export AC_TYPES
+
+# Configure AC Math
+if [ ! -d ./ac_math ]; then
+  echo "Downloading AC_Math..."
+  git clone http://github.com/hlslibs/ac_math.git
+fi
+AC_TYPES=`pwd`/ac_math
+export AC_MATH
 
 # Configure AC Simutils
 if [ ! -d ./ac_simutils ]; then

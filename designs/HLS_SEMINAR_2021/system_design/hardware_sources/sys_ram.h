@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.5                                                 *
+ *  Software Version: 1.8                                                 *
  *                                                                        *
- *  Release Date    : Fri Oct 29 16:53:36 PDT 2021                        *
+ *  Release Date    : Sun Jul 16 19:01:51 PDT 2023                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.5.0                                               *
+ *  Release Build   : 1.8.0                                               *
  *                                                                        *
  *  Copyright 2021 Siemens                                                *
  *                                                                        *
@@ -159,7 +159,7 @@ public:
             arr_t orig  = array[aw.addr / bytesPerBeat];
 	    arr_t wdata = w.data.to_uint64();
 
-	    #pragma unroll
+	    #pragma hls_unroll
             for (int i=0; i<WSTRB_WIDTH; i++) {
               if (w.wstrb[i]) {
                 orig = nvhls::set_slc(orig, nvhls::get_slc<8>(wdata, (i*8)), (i*8));

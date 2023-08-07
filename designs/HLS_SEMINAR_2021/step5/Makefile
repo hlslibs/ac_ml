@@ -30,6 +30,9 @@ CONNECTIONS_HOME ?= $(CATAPULT_HOME)/shared
 # Pick up MatchLib via "MATCHLIB_HOME"
 MATCHLIB_HOME ?= $(CATAPULT_HOME)/shared/pkgs/matchlib
 
+# Pick up Boost Preprocessor via "BOOST_HOME"
+BOOST_HOME ?= $(CATAPULT_HOME)/shared/pkgs/boostpp/pp
+
 # Pick up AC Datatypes via "AC_TYPES"
 AC_TYPES ?= $(CATAPULT_HOME)/shared
 
@@ -54,6 +57,9 @@ $(error - Environment variable CONNECTIONS_HOME must be defined)
 endif
 ifndef MATCHLIB_HOME
 $(error - Environment variable MATCHLIB_HOME must be defined)
+endif
+ifndef BOOST_HOME
+$(error - Environment variable BOOST_HOME must be defined)
 endif
 ifndef AC_TYPES
 $(error - Environment variable AC_TYPES must be defined)
@@ -81,6 +87,9 @@ checkvar_CONNECTIONS_HOME: $(CONNECTIONS_HOME)/include/connections/connections.h
 # Check: $(MATCHLIB_HOME)/cmod/include/nvhls_marshaller.h
 checkvar_MATCHLIB_HOME: $(MATCHLIB_HOME)/cmod/include/nvhls_marshaller.h
 
+# Check: $(BOOST_HOME)/include/boost/preprocessor/arithmetic/add.hpp
+checkvar_BOOST_HOME: $(BOOST_HOME)/include/boost/preprocessor/arithmetic/add.hpp
+
 # Check: $(AC_TYPES)/include/ac_int.h
 checkvar_AC_TYPES: $(AC_TYPES)/include/ac_int.h
 
@@ -88,7 +97,7 @@ checkvar_AC_TYPES: $(AC_TYPES)/include/ac_int.h
 checkvar_AC_SIMUTILS: $(AC_SIMUTILS)/include/mc_scverify.h
 
 # Rule to check that environment variables are set correctly
-checkvars: checkvar_SYSTEMC_HOME checkvar_CONNECTIONS_HOME checkvar_MATCHLIB_HOME checkvar_AC_TYPES checkvar_AC_SIMUTILS
+checkvars: checkvar_SYSTEMC_HOME checkvar_CONNECTIONS_HOME checkvar_MATCHLIB_HOME checkvar_BOOST_HOME checkvar_AC_TYPES checkvar_AC_SIMUTILS
 # =====================================================================
 
 # Export variables to any sub-invoked Make
@@ -109,6 +118,7 @@ INCDIRS := -I$(SOURCE_DIR)
 INCDIRS += -I$(SYSTEMC_HOME)/include -I$(SYSTEMC_HOME)/src
 INCDIRS += -I$(CONNECTIONS_HOME)/include
 INCDIRS += -I$(MATCHLIB_HOME)/cmod/include
+INCDIRS += -I$(BOOST_HOME)/include
 INCDIRS += -I$(AC_TYPES)/include
 INCDIRS += -I$(AC_SIMUTILS)/include
 INCDIRS += -I$(SOURCE_DIR)../include
