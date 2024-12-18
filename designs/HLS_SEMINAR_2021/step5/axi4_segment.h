@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.8                                                 *
+ *  Software Version: 1.9                                                 *
  *                                                                        *
- *  Release Date    : Sun Jul 16 19:01:51 PDT 2023                        *
+ *  Release Date    : Mon Oct 14 17:47:36 PDT 2024                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.8.0                                               *
+ *  Release Build   : 1.9.0                                               *
  *                                                                        *
  *  Copyright 2021 Siemens                                                *
  *                                                                        *
@@ -124,8 +124,8 @@ namespace axi
     };
 
     template <Connections::connections_port_t PortType = AUTO_PORT>
-    struct w_master: public axi::axi4<Cfg>::write::template master<PortType> {
-      typedef typename axi::axi4<Cfg>::write::template master<PortType> base;
+    struct w_master: public axi::axi4<Cfg>::write::template manager<PortType> {
+      typedef typename axi::axi4<Cfg>::write::template manager<PortType> base;
       w_master(sc_module_name nm) : base(nm) {}
 
       b_payload single_write(uint32 addr, uint32 data) {
@@ -177,8 +177,8 @@ namespace axi
     };
 
     template <Connections::connections_port_t PortType = AUTO_PORT>
-    struct r_master: public axi::axi4<Cfg>::read::template master<PortType> {
-      typedef typename axi::axi4<Cfg>::read::template master<PortType> base;
+    struct r_master: public axi::axi4<Cfg>::read::template manager<PortType> {
+      typedef typename axi::axi4<Cfg>::read::template manager<PortType> base;
       r_master(sc_module_name nm) : base(nm) {}
 
       r_payload single_read(uint32 addr) {
@@ -221,8 +221,8 @@ namespace axi
     };
 
     template <Connections::connections_port_t PortType = AUTO_PORT>
-    struct r_slave : public axi::axi4<Cfg>::read::template slave<PortType> {
-      typedef typename axi::axi4<Cfg>::read::template slave<PortType> base;
+    struct r_slave : public axi::axi4<Cfg>::read::template subordinate<PortType> {
+      typedef typename axi::axi4<Cfg>::read::template subordinate<PortType> base;
 
       r_slave(sc_module_name nm) : base(nm) {}
 
@@ -275,8 +275,8 @@ namespace axi
     };
 
     template <Connections::connections_port_t PortType = AUTO_PORT>
-    struct w_slave : public axi::axi4<Cfg>::write::template slave<PortType> {
-      typedef typename axi::axi4<Cfg>::write::template slave<PortType> base;
+    struct w_slave : public axi::axi4<Cfg>::write::template subordinate<PortType> {
+      typedef typename axi::axi4<Cfg>::write::template subordinate<PortType> base;
       w_slave(sc_module_name nm) : base(nm) {}
 
       void reset() {

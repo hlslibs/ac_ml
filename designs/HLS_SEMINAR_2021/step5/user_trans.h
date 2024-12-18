@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.8                                                 *
+ *  Software Version: 1.9                                                 *
  *                                                                        *
- *  Release Date    : Sun Jul 16 19:01:51 PDT 2023                        *
+ *  Release Date    : Mon Oct 14 17:47:36 PDT 2024                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.8.0                                               *
+ *  Release Build   : 1.9.0                                               *
  *                                                                        *
  *  Copyright 2021 Siemens                                                *
  *                                                                        *
@@ -67,6 +67,12 @@ struct array_t {
       }
     }
     return os;
+  }
+  bool operator==(const array_t &rhs) const {
+    for (int i=0; i<SIZE; i++)
+      for (int j=0; j<SIZE; j++)
+        if ( data[i][j] != rhs.data[i][j] ) return false;
+    return true;
   }
 };
 

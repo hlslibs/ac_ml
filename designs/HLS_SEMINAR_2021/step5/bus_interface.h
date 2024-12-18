@@ -2,11 +2,11 @@
  *                                                                        *
  *  Catapult(R) Machine Learning Reference Design Library                 *
  *                                                                        *
- *  Software Version: 1.8                                                 *
+ *  Software Version: 1.9                                                 *
  *                                                                        *
- *  Release Date    : Sun Jul 16 19:01:51 PDT 2023                        *
+ *  Release Date    : Mon Oct 14 17:47:36 PDT 2024                        *
  *  Release Type    : Production Release                                  *
- *  Release Build   : 1.8.0                                               *
+ *  Release Build   : 1.9.0                                               *
  *                                                                        *
  *  Copyright 2021 Siemens                                                *
  *                                                                        *
@@ -58,7 +58,7 @@ public:
   // Bus I/Fs
   r_master<> CCS_INIT_S1(r_master0);
   w_master<> CCS_INIT_S1(w_master0);
-  typename local_axi4_lite::write::template slave<> CCS_INIT_S1(w_slave0);
+  typename local_axi4_lite::write::template subordinate<> CCS_INIT_S1(w_slave0);
 
   // User I/F to DUT
   // Read I/F
