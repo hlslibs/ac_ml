@@ -71,7 +71,6 @@ directive set -CLUSTER_RTL_SYN false
 directive set -CLUSTER_FAST_MODE false
 directive set -CLUSTER_TYPE combinational
 directive set -PROTOTYPING_ENGINE oasys
-directive set -PIPELINE_RAMP_UP true
 go new
 directive set -ARRAY_INDEX_OPTIMIZATION true
 directive set -ASSUME_ARRAY_INDEX_IN_RANGE true
