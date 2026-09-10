@@ -19,7 +19,7 @@ solution options defaults
 solution options set /ComponentLibs/SearchPath . -append
 solution options set /Interface/DefaultClockPeriod 2
 solution options set /Input/CppStandard c++11
-solution options set /Input/CompilerFlags {-DCONNECTIONS_NAMING_ORIGINAL -DCONNECTIONS_ACCURATE_SIM}
+solution options set /Input/CompilerFlags {-DCONNECTIONS_ACCURATE_SIM}
 solution options set /Input/SearchPath {../include {$MGC_HOME/shared/examples/matchlib/toolkit/include} {$MGC_HOME/shared/pkgs/matchlib/cmod/include}}
 solution options set /Flows/QuestaSIM/SCCOM_OPTS {-O3 -x c++ -Wall -Wno-unused-label -Wno-unknown-pragmas}
 solution options set /Flows/QuestaSIM/MSIM_AC_TYPES false
